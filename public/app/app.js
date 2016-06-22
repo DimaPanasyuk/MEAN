@@ -7,9 +7,9 @@ angular.module('app')
       templateUrl: '/partials/users',
       controller: 'Users'
     })
-  }])
-  .controller('App', ['$scope', function($scope) {
-    $scope.name = 'Dima';
+    .otherwise({
+      redirectTo: '/users'
+    })
   }])
   .controller('Users', ['$scope', function($scope) {
     
