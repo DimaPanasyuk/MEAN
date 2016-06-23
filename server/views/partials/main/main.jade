@@ -1,0 +1,24 @@
+.container
+  .row
+    .col-sm-12
+      h4 Main
+      hr
+      .row
+        .col-sm-6
+          .panel.panel-success
+            .panel-heading
+              strong Courses
+            .panel-body
+              ul
+                li(ng-repeat="course in courses")
+                  strong.text-primary {{course.name}} 
+                  span {{course.value}}
+        .col-sm-6
+          .panel.panel-success
+            .panel-heading
+              strong Users
+            .panel-body
+              ul
+                li(ng-repeat="user in users")
+                  strong.text-primary {{user.name}} 
+                  span {{user.age | number}}

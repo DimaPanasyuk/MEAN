@@ -35,14 +35,12 @@ Message.findOne().exec((err, messageDoc) => {
   mongoMessage = messageDoc.message;
 })
 
-app.get('/partials/:partialName', (req, res) => {
-  res.render(`partials/${req.params.partialName}`);
+app.get('/partials/:partialFolder/:partialName', (req, res) => {
+  res.render(`partials/${req.params.partialFolder}/${req.params.partialName}`);
 });
 
 app.get('*', (req, res) => {
-  res.render('index', {
-    mongoMessage: mongoMessage
-  });
+  res.render('index');
 });
 
 

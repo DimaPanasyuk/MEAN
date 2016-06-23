@@ -1,6 +1,25 @@
 extends ../includes/layout
 
 block main-content
+  header
+    .navbar.navbar-default
+      .container-fluid
+        .collapse.navbar-collapse
+          ul.nav.navbar-nav
+            li(ng-class="{'active': menuItem == 'main'}") 
+              a(href="/main") Main
+            li(ng-class="{'active': menuItem == 'courses'}") 
+              a(href="/courses") Courses
+            li(ng-class="{'active': menuItem == 'videos'}") 
+              a(href="/videos") Videos
+          form.navbar-form.navbar-right
+            button.btn.btn-primary Sign out
+        
   section.content
     div(ng-view)
-    h2= mongoMessage
+  
+  footer
+    .container
+      .row
+        .col-sm-12.text-center
+          p Company logo goes here!
