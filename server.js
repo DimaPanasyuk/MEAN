@@ -14,7 +14,7 @@ require('./server/config/routes')(app);
 
 const User = mongoose.model('User');
 passport.use(new LocalStrategy((email, password, done) => {
-  User.find({email: email}).exec((err, user) => {
+  User.findOne({email: email}).exec((err, user) => {
     if (user) { 
       return done(null, user);
     }
