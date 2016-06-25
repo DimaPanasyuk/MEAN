@@ -12,13 +12,20 @@ block main-content
               a(href="/courses") Courses
             li(ng-class="{'active': menuItem == 'videos'}") 
               a(href="/videos") Videos
-          form.navbar-form.navbar-right(ng-show="!authenticated")
+          form.navbar-form.navbar-right(ng-show="!identity.authenticated")
             .form-group.sign-in__input
               input.form-control(placeholder="Email" ng-model="user.email")
             .form-group.sign-in__input
               input.form-control(type="password" placeholder="Password" ng-model="user.password") 
             button.btn.btn-primary(ng-click="signIn(user)" ng-disabled="!user.email || !user.password") Sign in
-        
+          ul.nav.navbar-nav.navbar-right(ng-show="identity.authenticated")
+            li.dropdown
+              a.dropdown-toggle(href="" data-toggle="dropdown")
+                strong {{identity.email}}
+                strong.caret
+              ul.dropdown-menu
+                li
+                  a(href="" ng-click="signOut()") Sign out
   section.content
     div(ng-view)
   

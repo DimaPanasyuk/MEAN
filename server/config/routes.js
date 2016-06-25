@@ -7,7 +7,16 @@ module.exports = function(app) {
 
   app.post('/signin', auth);
 
+  app.post('/signout', (req, res) => {
+    req.logout();
+    res.send({
+      status: true
+    });
+  });
+
   app.get('*', (req, res) => {
-    res.render('index');
+    res.render('index', {
+      bootstrappedUser: req.user
+    });
   });
 };

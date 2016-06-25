@@ -7,7 +7,8 @@ head
   link(href="/main.css", rel="stylesheet")
   base(href="/")
   title Document
-body(ng-app="app")
+body(ng-app="app" ng-cloak)
+  include currentUser
   block main-content
   include scripts
   
