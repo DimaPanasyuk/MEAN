@@ -14,14 +14,14 @@ gulp.task('js', () => {
              .pipe(gulp.dest(settings.js_src));
 });
 
-gulp.task('views', () => {
-  return gulp.src(settings.views)
-             .pipe(gulp.dest(settings.viewsDest));
-})
+// gulp.task('views', () => {
+//   return gulp.src(settings.views)
+//              .pipe(gulp.dest(settings.viewsDest));
+// })
 
-gulp.task('watch', ['js', 'views'], () => {
+gulp.task('watch', ['js'], () => {
   gulp.watch(settings.js, ['js']);
-  gulp.watch(settings.views, ['views'])
+  //gulp.watch(settings.views, ['views'])
 });
 
 gulp.task('default', ['watch']);

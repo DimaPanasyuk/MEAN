@@ -7,13 +7,64 @@
     .config(['$routeProvider', '$locationProvider', 
       function($routeProvider, $locationProvider) {
         $locationProvider.html5Mode(true);
-    }])
+    }]);
+})();
+(function() {
+  angular.module('app').controller('Account', Account);
+  Account.$inject = [
+    '$scope', 
+    '$rootScope',
+    'authResource'
+  ];
+  function Account($scope, $rootScope, authResource) {
+    $scope.signIn = signIn;
+    
+    function signIn() {
+      authResource.signIn({
+        username: $scope.user.email,
+        password: $scope.user.password
+      }).$promise
+      .then(function(data) {
+        if (data.status === true) {
+          toastr.success('Logged in successfully!');
+          $scope.authenticated = true;
+        } else {
+          toastr.error('There is no such user!');
+        }
+      });
+    }
+  }
+})();
+(function() {
+  angular.module('app').service('authResource', authResource);
+  authResource.$inject = ['$resource'];
+  function authResource($resource) {
+    return $resource('/signin', {}, {
+      signIn: {
+        method: 'POST'
+      }
+    });
+  }
 })();
 (function() {
   angular.module('app').controller('Courses', Courses);
   Courses.$inject = ['$scope', '$rootScope'];
   function Courses($scope, $rootScope) {
     $rootScope.menuItem = 'courses';
+    $scope.courses = [
+      {title: 'course_1', desc: 'desc_1'},
+      {title: 'course_1', desc: 'desc_1'},
+      {title: 'course_1', desc: 'desc_1'},
+      {title: 'course_1', desc: 'desc_1'},
+      {title: 'course_1', desc: 'desc_1'},
+      {title: 'course_1', desc: 'desc_1'},
+      {title: 'course_1', desc: 'desc_1'},
+      {title: 'course_1', desc: 'desc_1'},
+      {title: 'course_1', desc: 'desc_1'},
+      {title: 'course_1', desc: 'desc_1'},
+      {title: 'course_1', desc: 'desc_1'},
+      {title: 'course_1', desc: 'desc_1'}
+    ];
   }
 })();
 (function() {
@@ -21,26 +72,9 @@
   coursesConfig.$inject = ['conf', '$routeProvider'];
   function coursesConfig(conf, $routeProvider) {
     $routeProvider.when('/courses', {
-      templateUrl: conf.templates + '/courses/courses',
+      templateUrl: '/courses/courses',
       controller: 'Courses'
-    })
-  }
-})();
-(function() {
-  angular.module('app').controller('Videos', Videos);
-  Videos.$inject = ['$scope', '$rootScope'];
-  function Videos($scope, $rootScope) {
-    $rootScope.menuItem = 'videos';
-  }
-})();
-(function() {
-  angular.module('app').config(videosConfig);
-  videosConfig.$inject = ['conf', '$routeProvider'];
-  function videosConfig(conf, $routeProvider) {
-    $routeProvider.when('/videos', {
-      templateUrl: conf.templates + '/videos/videos',
-      controller: 'Videos'
-    })
+    });
   }
 })();
 (function() {
@@ -79,8 +113,25 @@
   mainConfig.$inject = ['conf', '$routeProvider'];
   function mainConfig(conf, $routeProvider) {
     $routeProvider.when('/main', {
-      templateUrl: conf.templates + '/main/main',
+      templateUrl: '/main/main',
       controller: 'Main'
+    })
+  }
+})();
+(function() {
+  angular.module('app').controller('Videos', Videos);
+  Videos.$inject = ['$scope', '$rootScope'];
+  function Videos($scope, $rootScope) {
+    $rootScope.menuItem = 'videos';
+  }
+})();
+(function() {
+  angular.module('app').config(videosConfig);
+  videosConfig.$inject = ['conf', '$routeProvider'];
+  function videosConfig(conf, $routeProvider) {
+    $routeProvider.when('/videos', {
+      templateUrl: '/videos/videos',
+      controller: 'Videos'
     })
   }
 })();
