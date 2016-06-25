@@ -10,7 +10,10 @@ module.exports = (req, res, next) => {
       if (err) return next(err);
       res.send({
         status: true,
-        user: user
+        user: {
+          email: user.email,
+          id: user._id
+        }
       });
     });
   });
