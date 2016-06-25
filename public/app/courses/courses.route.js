@@ -5,6 +5,6 @@
     $routeProvider.when('/courses', {
       templateUrl: '/courses/courses',
       controller: 'Courses'
-    })
+    });
   }
 })();

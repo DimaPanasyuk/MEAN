@@ -9,7 +9,6 @@ module.exports = function(config) {
   db.once('open', () => {
     console.log('database is open!');
   });
-  
   const userSchema = mongoose.Schema({
     email: String,
     password: String
@@ -25,5 +24,5 @@ module.exports = function(config) {
         User.create({email: 'user2@ukr.net', password: '333'});
       }
     }
-  })
+  });
 }

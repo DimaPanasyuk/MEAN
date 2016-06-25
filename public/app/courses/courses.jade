@@ -3,3 +3,11 @@
     .col-sm-12
       h4 Courses
       hr
+      .panel.panel-info
+        .panel-heading
+          strong Recently uploaded courses
+        .panel-body
+          ul
+            li(ng-repeat="course in courses")
+              strong {{course.title}} 
+              span {{course.desc}}

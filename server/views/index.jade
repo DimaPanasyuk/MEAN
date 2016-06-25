@@ -1,7 +1,7 @@
 extends ../includes/layout
 
 block main-content
-  header
+  header(ng-controller="Account")
     .navbar.navbar-default
       .container-fluid
         .collapse.navbar-collapse
@@ -12,8 +12,12 @@ block main-content
               a(href="/courses") Courses
             li(ng-class="{'active': menuItem == 'videos'}") 
               a(href="/videos") Videos
-          form.navbar-form.navbar-right
-            button.btn.btn-primary Sign out
+          form.navbar-form.navbar-right(ng-show="!authenticated")
+            .form-group.sign-in__input
+              input.form-control(placeholder="Email" ng-model="user.email")
+            .form-group.sign-in__input
+              input.form-control(type="password" placeholder="Password" ng-model="user.password") 
+            button.btn.btn-primary(ng-click="signIn(user)" ng-disabled="!user.email || !user.password") Sign in
         
   section.content
     div(ng-view)

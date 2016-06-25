@@ -7,7 +7,8 @@ const env = process.env.NODE_ENV || 'development';
 const config = require('./server/config/config')[env];
 
 const app = express();
-require('./server/config/express')(app, config);
+
+require('./server/config/express')(app, config.rootPath);
 require('./server/config/mongoose')(config);
 require('./server/config/routes')(app);
 
@@ -28,7 +29,7 @@ passport.serializeUser((user, done) => {
   }
 });
 passport.deserializeUser((id, done) => {
-  User.findOn({_id: id}).exec((err, user) => {
+  User.findOne({_id: id}).exec((err, user) => {
     if (user) {
       return done(null, user);
     } else {
