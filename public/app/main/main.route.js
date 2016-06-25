@@ -3,7 +3,7 @@
   mainConfig.$inject = ['conf', '$routeProvider'];
   function mainConfig(conf, $routeProvider) {
     $routeProvider.when('/main', {
-      templateUrl: conf.templates + '/main/main',
+      templateUrl: '/main/main',
       controller: 'Main'
     })
   }

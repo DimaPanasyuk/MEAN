@@ -1,48 +1,41 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+
 const env = process.env.NODE_ENV || 'development';
-const port = process.env.PORT || 3000;
+const config = require('./server/config/config')[env];
 
 const app = express();
+require('./server/config/express')(app, config);
+require('./server/config/mongoose')(config);
+require('./server/config/routes')(app);
 
-app.set('views', `${__dirname}/server/views`);
-app.set('view engine', 'jade');
-app.use(express.static(`${__dirname}/public`));
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
-
-if (env === 'development') {
-  mongoose.connect('mongodb://localhost/mean');
-} else {
-  mongoose.connect('mongodb://dima:dima@ds021694.mlab.com:21694/mean');
-}
- 
-const db = mongoose.connection;
-db.on('error', (err) => {
-  console.log('connection error!');
+const User = mongoose.model('User');
+passport.use(new LocalStrategy((email, password, done) => {
+  User.find({email: email}).exec((err, user) => {
+    if (user) { 
+      return done(null, user);
+    }
+    if (!user) {
+      return done(null, false);
+    }
+  });
+}));
+passport.serializeUser((user, done) => {
+  if (user) {
+    done(null, user._id);
+  }
 });
-db.once('open', () => {
-  console.log('database is open!');
-});
-
-const messageSchema = mongoose.Schema({
-  message: String
-});
-const Message = mongoose.model('Message', messageSchema);
-var mongoMessage;
-Message.findOne().exec((err, messageDoc) => {
-  mongoMessage = messageDoc.message;
-})
-
-app.get('/partials/:partialFolder/:partialName', (req, res) => {
-  res.render(`partials/${req.params.partialFolder}/${req.params.partialName}`);
+passport.deserializeUser((id, done) => {
+  User.findOn({_id: id}).exec((err, user) => {
+    if (user) {
+      return done(null, user);
+    } else {
+      return done(null, false);
+    }
+  });
 });
 
-app.get('*', (req, res) => {
-  res.render('index');
-});
-
-
-app.listen(port);
-console.log(`Server is running on port ${port}`);
+app.listen(config.port);
+console.log(`Server is running on port ${config.port}`);

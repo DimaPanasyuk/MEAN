@@ -21,25 +21,8 @@
   coursesConfig.$inject = ['conf', '$routeProvider'];
   function coursesConfig(conf, $routeProvider) {
     $routeProvider.when('/courses', {
-      templateUrl: conf.templates + '/courses/courses',
+      templateUrl: '/courses/courses',
       controller: 'Courses'
-    })
-  }
-})();
-(function() {
-  angular.module('app').controller('Videos', Videos);
-  Videos.$inject = ['$scope', '$rootScope'];
-  function Videos($scope, $rootScope) {
-    $rootScope.menuItem = 'videos';
-  }
-})();
-(function() {
-  angular.module('app').config(videosConfig);
-  videosConfig.$inject = ['conf', '$routeProvider'];
-  function videosConfig(conf, $routeProvider) {
-    $routeProvider.when('/videos', {
-      templateUrl: conf.templates + '/videos/videos',
-      controller: 'Videos'
     })
   }
 })();
@@ -79,8 +62,25 @@
   mainConfig.$inject = ['conf', '$routeProvider'];
   function mainConfig(conf, $routeProvider) {
     $routeProvider.when('/main', {
-      templateUrl: conf.templates + '/main/main',
+      templateUrl: '/main/main',
       controller: 'Main'
+    })
+  }
+})();
+(function() {
+  angular.module('app').controller('Videos', Videos);
+  Videos.$inject = ['$scope', '$rootScope'];
+  function Videos($scope, $rootScope) {
+    $rootScope.menuItem = 'videos';
+  }
+})();
+(function() {
+  angular.module('app').config(videosConfig);
+  videosConfig.$inject = ['conf', '$routeProvider'];
+  function videosConfig(conf, $routeProvider) {
+    $routeProvider.when('/videos', {
+      templateUrl: '/videos/videos',
+      controller: 'Videos'
     })
   }
 })();

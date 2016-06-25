@@ -3,7 +3,7 @@
   coursesConfig.$inject = ['conf', '$routeProvider'];
   function coursesConfig(conf, $routeProvider) {
     $routeProvider.when('/courses', {
-      templateUrl: conf.templates + '/courses/courses',
+      templateUrl: '/courses/courses',
       controller: 'Courses'
     })
   }
