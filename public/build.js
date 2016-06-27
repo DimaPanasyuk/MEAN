@@ -7,6 +7,14 @@
     .config(['$routeProvider', '$locationProvider', 
       function($routeProvider, $locationProvider) {
         $locationProvider.html5Mode(true);
+    }])
+    .run(['$rootScope', '$location', function($rootScope, $location) {
+      $rootScope.$on('$routeChangeError', function(evt, current, prev, err) {
+        console.log('Err', err);
+        if (err) {
+          $location.path('/main');
+        }
+      });
     }]);
 })();
 (function() {
@@ -16,9 +24,11 @@
     '$rootScope',
     'signInResource',
     'signOutResource',
-    'identity'
+    'identity',
+    'User',
+    '$location'
   ];
-  function Account($scope, $rootScope, signInResource, signOutResource, identity) {
+  function Account($scope, $rootScope, signInResource, signOutResource, identity, User, $location) {
     $scope.signIn = signIn;
     $scope.signOut = signOut;
     $scope.identity = identity;
@@ -35,8 +45,11 @@
             email: '',
             password: ''
           };
+          $scope.identity.currentUser = new User();
+          angular.extend($scope.identity.currentUser, data.user);
           $scope.identity.email = data.user.email;
           $scope.identity.authenticated = true;
+          console.log($scope.identity.currentUser);
         } else {
           toastr.error('<b>Incorrect email or password!<b>');
         }
@@ -49,6 +62,7 @@
         if (data.status === true) {
           toastr.success('<b>Logged out successfully!</b>');
           $scope.identity.authenticated = false;
+          $location.path('/main');
         } else {
           console.log('foo');
         }
@@ -78,18 +92,86 @@
 })();
 (function() {
   angular.module('app').service('identity', identity);
-  identity.$inject = ['$window'];
-  function identity($window) {
+  identity.$inject = ['$window', 'User'];
+  function identity($window, User) {
     var authenticated = false;
+    var currentUser = {};
     var email = '';
     if ($window.bootstrappedUserObject) {
+      currentUser = new User();
+      angular.extend(currentUser, $window.bootstrappedUserObject); 
       authenticated = true;
       email = $window.bootstrappedUserObject.email;
+      console.log(currentUser);
     }
     return {
       authenticated: authenticated,
-      email: email
+      email: email,
+      currentUser: currentUser,
+      isAuthorized: isAuthorized
     };
+    
+    function isAuthorized(permission) {
+      return this.currentUser.roles && this.currentUser.roles.indexOf(permission) > -1;
+    }
+  }
+})();
+(function() {
+  angular.module('app').service('User', User);
+  User.$inject = ['$resource'];
+  function User($resource) {
+    var UserResource = $resource('/api/users', {id: '@id'});
+    UserResource.prototype.isAdmin = function() {
+      return this.roles && this.roles.indexOf('Admin') > -1;
+    };
+    return UserResource;
+  }
+})();
+(function() {
+  angular.module('app').controller('Admin', Admin);
+  Admin.$inject = [
+    '$scope', 
+    '$rootScope',
+    'usersPromise'
+  ];
+  function Admin($scope, $rootScope, usersPromise) {
+    $scope.pageTitle = 'Admin page';
+    usersPromise.$promise
+    .then(function(data) {
+      $scope.users = data.users;
+    });
+  }
+})();
+(function() {
+  angular.module('app').config(adminConfig);
+  adminConfig.$inject = ['$routeProvider'];
+  function adminConfig($routeProvider) {
+    $routeProvider.when('/admin', {
+      templateUrl: 'admin/admin',
+      controller: 'Admin',
+      resolve: {
+        auth: ['identity', function(identity) {
+            if (identity.isAuthorized('Admin')) {
+              return true;
+            } else {
+              throw {
+                message: 'no rights'
+              };
+            }
+        }],
+        usersPromise: ['usersResource', function(usersResource) {
+          return usersResource.get({}).$promise;
+        }]
+      }
+    });
+  }
+})();
+
+(function() {
+  angular.module('app').service('usersResource', usersResource);
+  usersResource.$inject = ['$resource'];
+  function usersResource($resource) {
+    return $resource('/api/users', {}, {});
   }
 })();
 (function() {

@@ -1,0 +1,14 @@
+.container
+  .row
+    .col-sm-12
+      h4 {{pageTitle}}
+      hr
+  .row
+    .col-sm-6
+      .panel.panel-success
+        .panel-heading
+          strong Users list
+        .panel-body
+          ul.list-group
+            li.list-group-item(ng-repeat="user in users")
+              strong {{user.email}}    

@@ -13,7 +13,8 @@ module.exports = function(config) {
   const userSchema = mongoose.Schema({
     email: String,
     password: String,
-    token: String
+    token: String,
+    roles: [String]
   });
   
   userSchema.methods = {
@@ -31,13 +32,13 @@ module.exports = function(config) {
         var token, password;
         token = generateToken();
         password = generateHashPassword(token, '123');
-        User.create({email: 'dima@ukr.net', password: password, token: token});
+        User.create({email: 'dima@ukr.net', password: password, token: token, roles: ['Admin']});
         token = generateToken();
         password = generateHashPassword(token, '321');
-        User.create({email: 'user1@ukr.net', password: password, token: token});
+        User.create({email: 'user1@ukr.net', password: password, token: token, roles: []});
         token = generateToken();
         password = generateHashPassword(token, '123');
-        User.create({email: 'user2@ukr.net', password: password, token: token});
+        User.create({email: 'user2@ukr.net', password: password, token: token, roles: []});
       }
     }
   });

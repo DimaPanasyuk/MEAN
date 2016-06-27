@@ -5,9 +5,11 @@
     '$rootScope',
     'signInResource',
     'signOutResource',
-    'identity'
+    'identity',
+    'User',
+    '$location'
   ];
-  function Account($scope, $rootScope, signInResource, signOutResource, identity) {
+  function Account($scope, $rootScope, signInResource, signOutResource, identity, User, $location) {
     $scope.signIn = signIn;
     $scope.signOut = signOut;
     $scope.identity = identity;
@@ -24,8 +26,11 @@
             email: '',
             password: ''
           };
+          $scope.identity.currentUser = new User();
+          angular.extend($scope.identity.currentUser, data.user);
           $scope.identity.email = data.user.email;
           $scope.identity.authenticated = true;
+          console.log($scope.identity.currentUser);
         } else {
           toastr.error('<b>Incorrect email or password!<b>');
         }
@@ -38,6 +43,7 @@
         if (data.status === true) {
           toastr.success('<b>Logged out successfully!</b>');
           $scope.identity.authenticated = false;
+          $location.path('/main');
         } else {
           console.log('foo');
         }

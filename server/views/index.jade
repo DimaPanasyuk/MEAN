@@ -25,6 +25,8 @@ block main-content
                 strong.caret
               ul.dropdown-menu
                 li
+                  a(href="/admin" ng-show="identity.currentUser.isAdmin()") Admin page
+                li
                   a(href="" ng-click="signOut()") Sign out
   section.content
     div(ng-view)
