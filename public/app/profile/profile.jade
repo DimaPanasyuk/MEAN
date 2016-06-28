@@ -1,0 +1,19 @@
+.container
+  .row
+    .col-sm-4.col-sm-offset-4
+      .panel.panel-success
+        .panel-heading.text-center
+          strong Profile page
+        .panel-body
+          .row
+            .col-sm-12
+              .form-group
+                input.form-control.text-center(type="text" placeholder="Change Email" ng-model="user.email")
+          .row
+            .col-sm-12
+              .form-group
+                input.form-control.text-center(type="text" placeholder="Change Password" ng-model="user.password")
+          .row
+            .col-sm-12
+              .form-group
+                button.btn.btn-sm.btn-block.btn-success(ng-click="save()") Save Changes

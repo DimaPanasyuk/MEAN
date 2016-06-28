@@ -16,11 +16,20 @@
       authenticated: authenticated,
       email: email,
       currentUser: currentUser,
-      isAuthorized: isAuthorized
+      isAuthorized: isAuthorized,
+      isAuthorizedAsUser: isAuthorizedAsUser
     };
     
     function isAuthorized(permission) {
       return this.currentUser.roles && this.currentUser.roles.indexOf(permission) > -1;
+    }
+    
+    function isAuthorizedAsUser() {
+      if (this.isAuthorized()) {
+        return true; 
+      } else {
+        return false
+      }
     }
   }
 })();

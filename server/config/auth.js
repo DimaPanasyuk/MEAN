@@ -1,6 +1,7 @@
 const passport = require('passport');
 
 exports.auth = (req, res, next) => {
+  req.body.email = req.body.email.toLowerCase();
   const auth = passport.authenticate('local', (err, user) => {
     if (err) next(err);
     if (!user) {

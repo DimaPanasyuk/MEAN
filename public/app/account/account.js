@@ -16,7 +16,7 @@
     
     function signIn() {
       signInResource.signIn({
-        username: $scope.user.email,
+        email: $scope.user.email,
         password: $scope.user.password
       }).$promise
       .then(function(data) {

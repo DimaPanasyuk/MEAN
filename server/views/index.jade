@@ -6,12 +6,16 @@ block main-content
       .container-fluid
         .collapse.navbar-collapse
           ul.nav.navbar-nav
+            li(ng-class="{'active': menuItem == 'profile'}") 
+              a(href="/profile") Profile
             li(ng-class="{'active': menuItem == 'main'}") 
               a(href="/main") Main
             li(ng-class="{'active': menuItem == 'courses'}") 
               a(href="/courses") Courses
             li(ng-class="{'active': menuItem == 'videos'}") 
               a(href="/videos") Videos
+            li(ng-class="{'active': menuItem == 'signup'}") 
+              a(href="/signup") Sign up
           form.navbar-form.navbar-right(ng-show="!identity.authenticated")
             .form-group.sign-in__input
               input.form-control(placeholder="Email" ng-model="user.email")

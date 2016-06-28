@@ -1,0 +1,21 @@
+.container
+  .row
+    .col-sm-4.col-sm-offset-4
+      .panel.panel-primary
+        .panel-heading.text-center
+          strong Sign up
+        .panel-body
+          .row
+            .col-sm-12
+              .form-group
+                input.form-control.text-center(type="text" ng-model="user.email" placeholder="Email")
+          .row
+            .col-sm-12
+              .form-group
+                input.form-control.text-center(type="text" ng-model="user.password" placeholder="Password")
+          .row
+            .col-sm-12
+              .form-group
+                button.btn.btn-sm.btn-block.btn-primary(ng-disabled="!user.email.length || !user.password.length" ng-click="signUp()") 
+                  | Sign up   
+      

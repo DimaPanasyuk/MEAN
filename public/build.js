@@ -35,7 +35,7 @@
     
     function signIn() {
       signInResource.signIn({
-        username: $scope.user.email,
+        email: $scope.user.email,
         password: $scope.user.password
       }).$promise
       .then(function(data) {
@@ -108,11 +108,20 @@
       authenticated: authenticated,
       email: email,
       currentUser: currentUser,
-      isAuthorized: isAuthorized
+      isAuthorized: isAuthorized,
+      isAuthorizedAsUser: isAuthorizedAsUser
     };
     
     function isAuthorized(permission) {
       return this.currentUser.roles && this.currentUser.roles.indexOf(permission) > -1;
+    }
+    
+    function isAuthorizedAsUser() {
+      if (this.isAuthorized()) {
+        return true; 
+      } else {
+        return false
+      }
     }
   }
 })();
@@ -206,6 +215,40 @@
   }
 })();
 (function() {
+  angular.module('app').controller('Profile', Profile);
+  Profile.$inject = ['$scope', '$rootScope'];
+  function Profile($scope, $rootScope) {
+    $rootScope.menuItem = 'profile';
+    $scope.profile = {
+      email: '',
+      password: ''
+    };
+    console.log('profile');
+  }
+})();
+(function() {
+  angular.module('app').config(profileConfig);
+  profileConfig.$inject = ['$routeProvider'];
+  function profileConfig($routeProvider) {
+    $routeProvider.when('/profile', {
+      templateUrl: 'profile/profile',
+      controller: 'Profile',
+      resolve: {
+        auth: ['identity', function(identity) {
+            if (identity.isAuthorizedAsUser()) {
+              return true;
+            } else {
+              throw {
+                message: 'no rights'
+              };
+            }
+        }],
+      }
+    });
+  }
+})();
+
+(function() {
   angular.module('app').controller('Main', Main);
   Main.$inject = ['$scope', '$rootScope'];
   function Main($scope, $rootScope) {
@@ -244,6 +287,62 @@
       templateUrl: '/main/main',
       controller: 'Main'
     })
+  }
+})();
+(function() {
+  angular.module('app').controller('SignUp', SignUp);
+  SignUp.$inject = [
+    '$scope', 
+    '$rootScope',
+    'signUpResource',
+    '$location',
+    'User',
+    'identity'
+  ];
+  function SignUp($scope, $rootScope, signUpResource, $location, User, identity) {
+    $rootScope.menuItem = 'signup';
+    $scope.user = {
+      email: '',
+      password: ''
+    };
+    $scope.identity = identity;
+    $scope.signUp = signUp;
+    
+    function signUp() {
+      signUpResource.signUp($scope.user).$promise
+      .then(function(data) {
+        $scope.identity.currentUser = new User();
+        angular.extend($scope.identity.currentUser, data.user);
+        $scope.identity.email = data.user.email;
+        $scope.identity.authenticated = true;
+        toastr.success('<b>Sign up success!</b>');
+        $location.path('/main');    
+      })
+      .catch(function(err) {
+        toastr.error('<b>' + err.data.reason + '</b>');
+      });
+    }
+  }
+})();
+(function() {
+  angular.module('app').config(signUpConfig);
+  signUpConfig.$inject = ['$routeProvider'];
+  function signUpConfig($routeProvider) {
+    $routeProvider.when('/signup', {
+      templateUrl: '/signup/signup',
+      controller: 'SignUp'
+    });
+  }
+})();
+(function() {
+  angular.module('app').service('signUpResource', signUpResource);
+  signUpResource.$inject = ['$resource'];
+  function signUpResource($resource) {
+    return $resource('/signup', {}, {
+      signUp: {
+        method: 'POST'
+      }
+    });
   }
 })();
 (function() {
