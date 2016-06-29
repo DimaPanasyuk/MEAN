@@ -7,6 +7,25 @@ exports.getUsers = (req, res) => {
   });
 };
 
+exports.updateUser = (req, res, next) => {
+  const userUpdates = req.body;
+  
+  if (req.user._id !== userUpdates._id && !req.user.hasRole('admin')) {
+    res.status(403);
+    return res.end();
+  }
+  
+  req.user.email = userUpdates.email;
+  
+  if (req.user.password && req.user.password.length > 0) {
+    req.user.password = encrypt.generateHashPassword(req.user.token, userUpdates.password);
+  }
+  req.user.save((err) => {
+    if (err) { res.status(400); return res.send({reason: err.toString() }); }
+    res.send(req.user);
+  });  
+};
+
 exports.createUser = (req, res, next) => {
   const userData = req.body;
   userData.email = userData.email.toLowerCase();

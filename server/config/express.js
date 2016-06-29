@@ -12,7 +12,7 @@ module.exports = function(app, rootPath) {
   app.use(bodyParser.urlencoded({extended: true}));
   app.use(bodyParser.json());
   app.use(session({secret: 'mean', resave: false, saveUnitialized: false}));
-  app.use(passport.initialize());
+  app.use(passport.initialize()); 
   app.use(passport.session());
 };
 

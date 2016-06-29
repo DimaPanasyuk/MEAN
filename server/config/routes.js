@@ -6,11 +6,9 @@ const User  = mongoose.model('User');
 module.exports = function(app) {
   
   app.get('/api/users', auth.requireApiLogin, auth.requireRole('Admin'), users.getUsers);
-
-  app.post('/signin', auth.auth);
-
+  app.post('/api/users', users.updateUser);
   app.post('/signup', users.createUser);
-
+  app.post('/signin', auth.auth);
   app.post('/signout', (req, res) => {
     req.logout();
     res.send({

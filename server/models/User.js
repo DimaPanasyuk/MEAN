@@ -10,8 +10,11 @@ const userSchema = mongoose.Schema({
 });
 
 userSchema.methods = {
-  authenticate: function(passwordToCheck) {
+  authenticate(passwordToCheck) {
     return encrypt.generateHashPassword(this.token, passwordToCheck) === this.password;
+  },
+  hasRole(role) {
+    return this.roles.indexOf(role) > -1;
   }
 };
 
