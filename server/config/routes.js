@@ -1,9 +1,13 @@
 const auth = require('./auth');
 const mongoose = require('mongoose');
 const users = require('../controllers/users');
+const courses = require('../controllers/courses');
 const User  = mongoose.model('User');
 
 module.exports = function(app) {
+  
+  app.get('/api/courses', courses.returnCourses);
+  app.get('/api/courses/:id', courses.returnCourseInfo);
   
   app.get('/api/users', auth.requireApiLogin, auth.requireRole('Admin'), users.getUsers);
   app.post('/api/users', users.updateUser);

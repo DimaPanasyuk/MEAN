@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const userModel = require('../models/User');
+const coursesModel = require('../models/Course');
 
 module.exports = function(config) {
   mongoose.connect(config.db);
@@ -11,4 +12,5 @@ module.exports = function(config) {
     console.log('database is open!');
   });
   userModel.createDefaultUsers();
+  coursesModel.mockCourses();
 };

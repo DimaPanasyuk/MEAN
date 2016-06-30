@@ -1,13 +1,25 @@
 .container
   .row
     .col-sm-12
-      h4 Courses
-      hr
-      .panel.panel-info
-        .panel-heading
-          strong Recently uploaded courses
-        .panel-body
-          ul
-            li(ng-repeat="course in courses")
-              strong {{course.title}} 
-              span {{course.desc}}
+      .pull-right
+        .form-group.form-inline
+          .row
+            .col-sm-6
+              input.form-control(type="text" ng-model="searchText", placeholder="Filter")
+            .col-sm-6
+              select.form-control(ng-model="sortBy")
+                option(value="title") Sort by title
+                option(value="published") Sort by Publish Date
+  .row
+    .col-sm-12
+      table.table.table-bordered
+        .thead
+          tr 
+            th.text-center Title
+            th.text-center Publish Date
+        .tbody
+          tr(ng-repeat="course in courses | filter: searchText | orderBy: sortBy")
+            td.text-center 
+              a(href="/courses/{{course._id}}", title="{{course.title}}") {{course.title}}
+            td.text-center {{course.published | date: 'dd/MM/yyyy'}}
+             

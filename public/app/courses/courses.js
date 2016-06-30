@@ -1,21 +1,11 @@
 (function() {
   angular.module('app').controller('Courses', Courses);
-  Courses.$inject = ['$scope', '$rootScope'];
-  function Courses($scope, $rootScope) {
+  Courses.$inject = ['$scope', '$rootScope', 'coursesPromise'];
+  function Courses($scope, $rootScope, coursesPromise) {
     $rootScope.menuItem = 'courses';
-    $scope.courses = [
-      {title: 'course_1', desc: 'desc_1'},
-      {title: 'course_1', desc: 'desc_1'},
-      {title: 'course_1', desc: 'desc_1'},
-      {title: 'course_1', desc: 'desc_1'},
-      {title: 'course_1', desc: 'desc_1'},
-      {title: 'course_1', desc: 'desc_1'},
-      {title: 'course_1', desc: 'desc_1'},
-      {title: 'course_1', desc: 'desc_1'},
-      {title: 'course_1', desc: 'desc_1'},
-      {title: 'course_1', desc: 'desc_1'},
-      {title: 'course_1', desc: 'desc_1'},
-      {title: 'course_1', desc: 'desc_1'}
-    ];
+    coursesPromise.$promise
+    .then(function(data) {
+      $scope.courses = data;
+    });
   }
 })();

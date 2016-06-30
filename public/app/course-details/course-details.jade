@@ -1,0 +1,19 @@
+.container
+  .row
+    .col-sm-12.text-center
+      h3 {{course.title}}
+      hr
+  .row
+    .col-sm-12
+      ul.list-group
+        li.list-group-item 
+          h4 Course Title: {{course.title}}
+        li.list-group-item Featured
+          input(type="checkbox" ng-model="course.featured" disabled)
+        li.list-group-item
+          strong Published {{course.published | date: 'dd/MM/yyyy'}}
+        li.list-group-item
+          strong Tags: 
+          ul
+            li(ng-repeat="tag in course.tags")
+              {{tag}}

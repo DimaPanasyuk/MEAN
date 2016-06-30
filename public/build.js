@@ -184,33 +184,38 @@
   }
 })();
 (function() {
-  angular.module('app').controller('Courses', Courses);
-  Courses.$inject = ['$scope', '$rootScope'];
-  function Courses($scope, $rootScope) {
-    $rootScope.menuItem = 'courses';
-    $scope.courses = [
-      {title: 'course_1', desc: 'desc_1'},
-      {title: 'course_1', desc: 'desc_1'},
-      {title: 'course_1', desc: 'desc_1'},
-      {title: 'course_1', desc: 'desc_1'},
-      {title: 'course_1', desc: 'desc_1'},
-      {title: 'course_1', desc: 'desc_1'},
-      {title: 'course_1', desc: 'desc_1'},
-      {title: 'course_1', desc: 'desc_1'},
-      {title: 'course_1', desc: 'desc_1'},
-      {title: 'course_1', desc: 'desc_1'},
-      {title: 'course_1', desc: 'desc_1'},
-      {title: 'course_1', desc: 'desc_1'}
-    ];
+  angular.module('app').controller('CourseInfo', CourseInfo);
+  CourseInfo.$inject = ['$scope', '$rootScope', 'coursePromise'];
+  function CourseInfo($scope, $rootScope, coursePromise) {
+    coursePromise.$promise
+    .then(function(data) {
+      $scope.course = data;
+    });
   }
 })();
 (function() {
-  angular.module('app').config(coursesConfig);
-  coursesConfig.$inject = ['conf', '$routeProvider'];
-  function coursesConfig(conf, $routeProvider) {
-    $routeProvider.when('/courses', {
-      templateUrl: '/courses/courses',
-      controller: 'Courses'
+  angular.module('app').config(courseDetailsConfig);
+  courseDetailsConfig.$inject = ['$routeProvider'];
+  function courseDetailsConfig($routeProvider) {
+    $routeProvider.when('/courses/:id', {
+      templateUrl: '/course-details/course-details',
+      controller: 'CourseInfo',
+      resolve: {
+        coursePromise: ['$route', 'courseResource', function($route, courseResource) {
+          return courseResource.getCourse({id: $route.current.params.id}).$promise;
+        }]
+      }
+    });
+  }
+})();
+(function() {
+  angular.module('app').service('courseResource', courseResource);
+  courseResource.$inject = ['$resource'];
+  function courseResource($resource) {
+    return $resource('/api/courses/:id', {id: '@id'}, {
+      getCourse: {
+        method: 'GET'
+      }
     });
   }
 })();
@@ -248,47 +253,6 @@
   }
 })();
 
-(function() {
-  angular.module('app').controller('Main', Main);
-  Main.$inject = ['$scope', '$rootScope'];
-  function Main($scope, $rootScope) {
-    $rootScope.menuItem = 'main';
-    $scope.courses = [
-      {name: 'course1', value: 'yep1'},
-      {name: 'course1', value: 'yep1'},
-      {name: 'course1', value: 'yep1'},
-      {name: 'course1', value: 'yep1'},
-      {name: 'course1', value: 'yep1'},
-      {name: 'course1', value: 'yep1'},
-      {name: 'course1', value: 'yep1'},
-      {name: 'course1', value: 'yep1'}
-    ];
-    $scope.users = [
-      {name: 'user1', age: 18},
-      {name: 'user1', age: 18},
-      {name: 'user1', age: 18},
-      {name: 'user1', age: 18},
-      {name: 'user1', age: 18},
-      {name: 'user1', age: 18},
-      {name: 'user1', age: 18},
-      {name: 'user1', age: 18},
-      {name: 'user1', age: 18},
-      {name: 'user1', age: 18},
-      {name: 'user1', age: 18},
-      {name: 'user1', age: 18},
-    ]
-  }
-})();
-(function() {
-  angular.module('app').config(mainConfig);
-  mainConfig.$inject = ['conf', '$routeProvider'];
-  function mainConfig(conf, $routeProvider) {
-    $routeProvider.when('/main', {
-      templateUrl: '/main/main',
-      controller: 'Main'
-    })
-  }
-})();
 (function() {
   angular.module('app').controller('SignUp', SignUp);
   SignUp.$inject = [
@@ -346,6 +310,47 @@
   }
 })();
 (function() {
+  angular.module('app').controller('Courses', Courses);
+  Courses.$inject = ['$scope', '$rootScope', 'coursesPromise'];
+  function Courses($scope, $rootScope, coursesPromise) {
+    $rootScope.menuItem = 'courses';
+    coursesPromise.$promise
+    .then(function(data) {
+      $scope.courses = data;
+    });
+  }
+})();
+(function() {
+  angular.module('app').config(coursesConfig);
+  coursesConfig.$inject = ['conf', '$routeProvider'];
+  function coursesConfig(conf, $routeProvider) {
+    $routeProvider.when('/courses', {
+      templateUrl: '/courses/courses',
+      controller: 'Courses',
+      resolve: {
+        coursesPromise: ['coursesResource', function(coursesResource) {
+          return coursesResource.getCourses({}).$promise;
+        }]
+      }
+    });
+  }
+})();
+(function() {
+  angular.module('app').service('coursesResource', coursesResource);
+  coursesResource.$inject = ['$resource'];
+  function coursesResource($resource) {
+    return $resource('/api/courses/:id', {id : '@id'}, {
+      getCourses: {
+        method: 'GET',
+        isArray: true
+      },
+      updateCourse: {
+        method: 'PUT'
+      }
+    });
+  }
+})();
+(function() {
   angular.module('app').controller('Videos', Videos);
   Videos.$inject = ['$scope', '$rootScope'];
   function Videos($scope, $rootScope) {
@@ -359,6 +364,47 @@
     $routeProvider.when('/videos', {
       templateUrl: '/videos/videos',
       controller: 'Videos'
+    })
+  }
+})();
+(function() {
+  angular.module('app').controller('Main', Main);
+  Main.$inject = ['$scope', '$rootScope'];
+  function Main($scope, $rootScope) {
+    $rootScope.menuItem = 'main';
+    $scope.courses = [
+      {name: 'course1', value: 'yep1'},
+      {name: 'course1', value: 'yep1'},
+      {name: 'course1', value: 'yep1'},
+      {name: 'course1', value: 'yep1'},
+      {name: 'course1', value: 'yep1'},
+      {name: 'course1', value: 'yep1'},
+      {name: 'course1', value: 'yep1'},
+      {name: 'course1', value: 'yep1'}
+    ];
+    $scope.users = [
+      {name: 'user1', age: 18},
+      {name: 'user1', age: 18},
+      {name: 'user1', age: 18},
+      {name: 'user1', age: 18},
+      {name: 'user1', age: 18},
+      {name: 'user1', age: 18},
+      {name: 'user1', age: 18},
+      {name: 'user1', age: 18},
+      {name: 'user1', age: 18},
+      {name: 'user1', age: 18},
+      {name: 'user1', age: 18},
+      {name: 'user1', age: 18},
+    ]
+  }
+})();
+(function() {
+  angular.module('app').config(mainConfig);
+  mainConfig.$inject = ['conf', '$routeProvider'];
+  function mainConfig(conf, $routeProvider) {
+    $routeProvider.when('/main', {
+      templateUrl: '/main/main',
+      controller: 'Main'
     })
   }
 })();
